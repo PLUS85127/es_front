@@ -1,3 +1,4 @@
+import 'package:es_control/core/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,7 +16,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // Controladores para capturar el texto
   final _nameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -30,7 +30,6 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  // Función para ejecutar el registro
   Future<void> _handleRegister() async {
     final authProvider = context.read<AuthProvider>();
 
@@ -48,12 +47,15 @@ class _RegisterPageState extends State<RegisterPage> {
         lastName: _lastNameController.text.trim(),
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
-        role: 'MEMBER', // <--- FORZAMOS EL ROL AQUÍ INTERNAMENTE
+        role: 'MEMBER',
       );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('¡Registro exitoso! Inicie sesión.')),
+          SnackBar(
+            content: const Text('¡Registro exitoso! Inicie sesión.'),
+            backgroundColor: context.iconColor,
+          ),
         );
         Navigator.pushNamed(context, AppRoutes.login);
       }
@@ -71,7 +73,6 @@ class _RegisterPageState extends State<RegisterPage> {
     final isLoading = context.watch<AuthProvider>().isLoading;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -83,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Text(
                     'Crea tu cuenta',
                     style: GoogleFonts.lato(
-                      color: AppTheme.navyBlue,
+                      color: context.iconColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 26,
                     ),
@@ -130,26 +131,31 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   const SizedBox(height: 30),
 
-                  // BOTÓN CON LOADING
                   InkWell(
                     onTap: isLoading ? null : _handleRegister,
                     child: Container(
                       width: double.infinity,
                       height: 55,
                       decoration: BoxDecoration(
-                        color: isLoading ? Colors.grey : AppTheme.navyBlue,
+                        color: isLoading
+                            ? context.subIconColor.withOpacity(0.3)
+                            : context.iconColor,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Center(
                         child: isLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
+                            ? CircularProgressIndicator(
+                                color: context.isDark
+                                    ? AppTheme.darkBackground
+                                    : Colors.white,
                               )
                             : Text(
                                 'Registrate',
                                 style: GoogleFonts.lato(
                                   fontSize: 18,
-                                  color: Colors.white,
+                                  color: context.isDark
+                                      ? AppTheme.darkBackground
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -173,7 +179,10 @@ class _RegisterPageState extends State<RegisterPage> {
         padding: const EdgeInsets.only(bottom: 8),
         child: Text(
           text,
-          style: GoogleFonts.nunitoSans(fontWeight: FontWeight.w600),
+          style: GoogleFonts.nunitoSans(
+            fontWeight: FontWeight.w600,
+            color: context.textColor,
+          ),
         ),
       ),
     );

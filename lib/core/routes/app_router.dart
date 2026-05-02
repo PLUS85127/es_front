@@ -43,10 +43,10 @@ class AppRouter {
         final args =
             ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
         return LessonDetailPage(
-          quarterlyId: args['qId'],
-          lessonId: args['lId'],
-          dayId: args['dId'],
-          title: args['title'],
+          quarterlyId: args['qId'] ?? '',
+          lessonId: args['lId'] ?? '',
+          dayId: args['dId'] ?? '01',
+          title: args['title'] ?? '',
         );
       },
     };

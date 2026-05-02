@@ -1,13 +1,14 @@
 import 'package:get_it/get_it.dart';
-import 'package:es_control/features/lesson_study/domain/repositories/lesson_repository_impl.dart';
-import 'package:es_control/features/lesson_study/domain/repositories/lesson_repository.dart';
-import 'package:es_control/features/lesson_study/presentation/providers/lesson_provider.dart';
+import 'lesson_injector.dart';
+import 'auth_injector.dart';
+import 'reporting_injector.dart';
+import 'group_injector.dart';
 
-final sl = GetIt.instance; // sl = Service Locator
+final sl = GetIt.instance;
 
 Future<void> init() async {
-  // 1. Features - Lesson Study
-  sl.registerFactory(() => LessonProvider(repository: sl()));
-
-  sl.registerLazySingleton<LessonRepository>(() => LessonRepositoryImpl());
+  await initAuthInjector(sl);
+  await initLessonInjector(sl);
+  await initReportingInjector(sl);
+  await initGroupInjector(sl);
 }

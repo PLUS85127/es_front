@@ -1,26 +1,41 @@
+import 'package:es_control/features/authentication/domain/use_cases/logout_usecase.dart';
 import 'package:flutter/material.dart';
-import '../../data/datasources/auth_remote_data_source.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../domain/use_cases/login_usecase.dart';
+import '../../domain/use_cases/register_usecase.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/use_cases/get_me_usecase.dart';
 
 class AuthProvider extends ChangeNotifier {
-  final _dataSource = AuthRemoteDataSource();
+  final LoginUseCase loginUseCase;
+  final RegisterUseCase registerUseCase;
+  final LogoutUseCase logoutUseCase;
+  final GetMeUseCase getMeUseCase;
+
   bool _isLoading = false;
-  String? _userRole;
-  String? _firstName;
+  UserEntity? _user;
+
+  AuthProvider({
+    required this.loginUseCase,
+    required this.registerUseCase,
+    required this.logoutUseCase,
+    required this.getMeUseCase,
+  });
 
   bool get isLoading => _isLoading;
-  String? get userRole => _userRole;
-  String? get firstName => _firstName;
+  UserEntity? get user => _user;
 
   Future<bool> signIn(String email, String password) async {
     _isLoading = true;
     notifyListeners();
+
     try {
-      final data = await _dataSource.login(email, password);
-      _userRole = data['role']; // Guardamos si es PASTOR, DIRECTOR, etc.
-      _firstName = data['user']['firstName']; // Guardamos el nombre del usuario
-      // Aquí podrías guardar el token en FlutterSecureStorage
+      _user = await loginUseCase.execute(email, password);
+
       _isLoading = false;
       notifyListeners();
+      await loadUserProfile();
+
       return true;
     } catch (e) {
       _isLoading = false;
@@ -39,13 +54,48 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      await _dataSource.register({
+      await registerUseCase.execute({
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
         'password': password,
         'role': role,
       });
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+    notifyListeners();
+  }
+
+  Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await logoutUseCase.execute();
+      _user = null;
+    } catch (e) {
+      debugPrint("Error logout: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadUserProfile() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final tokenStr = prefs.getString('token');
+
+      if (tokenStr != null) {
+        _user = await getMeUseCase.execute(tokenStr);
+      }
+    } catch (e) {
+      debugPrint("Error cargando el perfil $e");
     } finally {
       _isLoading = false;
       notifyListeners();

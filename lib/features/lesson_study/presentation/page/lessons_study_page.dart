@@ -1,3 +1,4 @@
+import 'package:es_control/core/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +25,6 @@ class _LessonsStudyPageState extends State<LessonsStudyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -38,10 +37,10 @@ class _LessonsStudyPageState extends State<LessonsStudyPage> {
                 style: GoogleFonts.poppins(
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.navyBlue,
+                  color: context.textColor,
                 ),
               ),
-              const Divider(height: 20, thickness: 1, color: AppTheme.navyBlue),
+              Divider(height: 20, thickness: 1, color: context.iconColor),
               const SizedBox(height: 10),
               Expanded(
                 child: Consumer<LessonProvider>(
@@ -54,18 +53,21 @@ class _LessonsStudyPageState extends State<LessonsStudyPage> {
                       return Center(
                         child: Text(
                           "No hay trimestres disponibles",
-                          style: GoogleFonts.poppins(),
+                          style: GoogleFonts.poppins(
+                            color: context.subTextColor,
+                          ),
                         ),
                       );
                     }
 
                     return GridView.builder(
+                      //tamaño de la leccion
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 15,
-                            mainAxisSpacing: 15,
-                            childAspectRatio: 0.75,
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            childAspectRatio: 0.65,
                           ),
                       itemCount: provider.quarterlies.length,
                       itemBuilder: (context, index) {
@@ -84,17 +86,17 @@ class _LessonsStudyPageState extends State<LessonsStudyPage> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF2F2F2),
+                              color: context.cardColor,
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(
-                                color: Colors.black.withOpacity(0.05),
+                                color: context.subTextColor.withOpacity(0.05),
                               ),
                               image: quarterly.coverUrl != null
                                   ? DecorationImage(
                                       image: NetworkImage(quarterly.coverUrl!),
                                       fit: BoxFit.cover,
                                       colorFilter: ColorFilter.mode(
-                                        Colors.black.withOpacity(0.3),
+                                        context.subTextColor.withOpacity(0.3),
                                         BlendMode.darken,
                                       ),
                                     )

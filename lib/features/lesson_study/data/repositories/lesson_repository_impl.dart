@@ -1,27 +1,24 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:es_control/core/network/api_conf.dart';
 import 'package:http/http.dart' as http;
-import '../entities/quarterly.dart';
-import '../../data/models/quarterly_model.dart';
-import '../entities/lesson.dart';
-import '../../data/models/lesson_model.dart';
-import 'lesson_repository.dart';
+import '../../domain/entities/quarterly.dart';
+import '../models/quarterly_model.dart';
+import '../../domain/entities/lesson.dart';
+import '../models/lesson_model.dart';
+import '../../domain/repositories/lesson_repository.dart';
 
 class LessonRepositoryImpl implements LessonRepository {
   //10.64.226.87  10.64.226.87
 
   @override
-  // 1. Obtener la lista de trimestres disponibles
+  // obtiene la lista de trimestres disponibles
   Future<List<Quarterly>> getQuarterlies(String lang) async {
     final url = '${ApiConfig.quarterlies}?lang=$lang';
-    //print("Conectando a $url");
 
     try {
       final response = await http
           .get(Uri.parse(url))
           .timeout(const Duration(seconds: 30));
-      //print("Respuesta recibida: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -34,7 +31,7 @@ class LessonRepositoryImpl implements LessonRepository {
     }
   }
 
-  // 2. Obtener lecciones de un trimestre específico
+  //obtener lecciones de un trimestre específico
   Future<List<Lesson>> getLessons(
     String quarterlyId, {
     String lang = "es",
@@ -51,7 +48,7 @@ class LessonRepositoryImpl implements LessonRepository {
     }
   }
 
-  // 3. Obtener la lectura de un día específico
+  //obtener la lectura de un día específico
   Future<Map<String, dynamic>> getDayRead(
     String quarterlyId,
     String lessonId,
@@ -68,6 +65,34 @@ class LessonRepositoryImpl implements LessonRepository {
       return json.decode(response.body); //devuelve el contenido de ReadJson
     } else {
       throw Exception('Error al obtener la lectura');
+    }
+  }
+
+  @override
+  Future<void> markDayAsRead(
+    String token,
+    String quarterlyId,
+    String lessonId,
+    String dayId,
+  ) async {
+    final url = '${ApiConfig.baseUrl}/progress/toggle';
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'lang': 'es',
+        'qId': quarterlyId,
+        'lId': lessonId,
+        'dId': dayId,
+      }),
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 201) {
+      throw Exception('Error al marcar: ${response.statusCode}');
     }
   }
 }

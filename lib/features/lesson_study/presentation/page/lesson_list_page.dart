@@ -1,3 +1,4 @@
+import 'package:es_control/core/theme/theme_extension.dart';
 import 'package:es_control/features/lesson_study/domain/entities/quarterly.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,27 +33,25 @@ class _LessonListPageState extends State<LessonListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppTheme.navyBlue),
+          icon: Icon(Icons.arrow_back_ios, color: context.iconColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.title,
           style: GoogleFonts.poppins(
-            color: Colors.black,
+            color: context.textColor,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
       body: Column(
         children: [
-          const Divider(
+          Divider(
             thickness: 1,
-            color: Color(0xFFEEEEEE),
+            color: context.subTextColor.withOpacity(0.2),
             indent: 20,
             endIndent: 20,
           ),
@@ -60,8 +59,8 @@ class _LessonListPageState extends State<LessonListPage> {
             child: Consumer<LessonProvider>(
               builder: (context, provider, child) {
                 if (provider.isLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: AppTheme.navyBlue),
+                  return Center(
+                    child: CircularProgressIndicator(color: context.iconColor),
                   );
                 }
 
@@ -69,7 +68,7 @@ class _LessonListPageState extends State<LessonListPage> {
                   return Center(
                     child: Text(
                       "No hay lecciones disponibles para este trimestre.",
-                      style: GoogleFonts.poppins(color: Colors.black54),
+                      style: GoogleFonts.poppins(color: context.subTextColor),
                     ),
                   );
                 }
@@ -91,20 +90,20 @@ class _LessonListPageState extends State<LessonListPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.navyBlue,
+                          color: context.iconColor,
                         ),
                       ),
                       title: Text(
                         lesson.title,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
-                          color: Colors.black87,
+                          color: context.textColor,
                         ),
                       ),
-                      trailing: const Icon(
+                      trailing: Icon(
                         Icons.arrow_forward_ios,
                         size: 14,
-                        color: Colors.grey,
+                        color: context.subIconColor,
                       ),
                       onTap: () {
                         Navigator.pushNamed(

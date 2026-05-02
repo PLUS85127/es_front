@@ -25,6 +25,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: Colors.white,
       body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: _buildBottomNav(),
@@ -32,17 +33,19 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _buildBottomNav() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-      height: 80,
+      margin: const EdgeInsets.only(bottom: 15, left: 20, right: 15),
+      height: 60,
       decoration: BoxDecoration(
-        color: const Color(0xFFE0E0E0).withOpacity(0.8),
-        borderRadius: BorderRadius.circular(30),
+        color: Theme.of(context).canvasColor,
+
+        borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
+            blurRadius: 10,
           ),
         ],
       ),
@@ -63,15 +66,19 @@ class _MainPageState extends State<MainPage> {
 
   Widget _buildNavItem(IconData icon, int index) {
     final bool isActive = _currentIndex == index;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(8),
         color: Colors.transparent,
         child: Icon(
           icon,
-          size: 30,
-          color: isActive ? AppTheme.navyBlue : Colors.black45,
+          size: 26,
+          color: isActive
+              ? (isDark ? AppTheme.yellowDecorative : AppTheme.navyBlue)
+              : (isDark ? Colors.white38 : Colors.black45),
         ),
       ),
     );

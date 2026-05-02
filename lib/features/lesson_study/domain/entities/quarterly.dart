@@ -3,5 +3,14 @@ class Quarterly {
   final String title;
   final String? coverUrl;
 
-  Quarterly({required this.quarterlyId, required this.title, this.coverUrl});
+  final DateTime? startDate;
+  final DateTime? endDate;
+
+  Quarterly({
+    required this.quarterlyId,
+    required this.title,
+    this.coverUrl,
+    this.startDate,
+    this.endDate,
+  });
 }

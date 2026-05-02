@@ -1,5 +1,13 @@
 class Lesson {
   final String lessonId;
   final String title;
-  Lesson({required this.lessonId, required this.title});
+  final DateTime? startDate;
+  final DateTime? endDate;
+
+  Lesson({
+    required this.lessonId,
+    required this.title,
+    this.startDate,
+    this.endDate,
+  });
 }

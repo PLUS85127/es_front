@@ -1,3 +1,4 @@
+import 'package:es_control/core/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,7 +22,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    // Se escribe dispose, no disponse. Y devuelve void.
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -39,7 +39,6 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (success && mounted) {
-        // Navegamos al Main si el login es exitoso
         Navigator.pushReplacementNamed(context, AppRoutes.main);
       }
     } catch (e) {
@@ -56,11 +55,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Obtenemos el estado de carga del provider
     final isLoading = context.watch<AuthProvider>().isLoading;
-
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -73,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     'Inicia con tu cuenta',
                     style: GoogleFonts.lato(
-                      color: AppTheme.navyBlue,
+                      color: context.textColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 26,
                       letterSpacing: 0.2,
@@ -83,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     'Únete a la comunidad de la Escuela Sabática',
                     style: GoogleFonts.lato(
-                      color: Colors.black54,
+                      color: context.subTextColor,
                       fontSize: 14,
                     ),
                   ),
@@ -103,8 +99,9 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _emailController, // Conectado al controlador
                     label: 'Ingrese su email',
                     icon: Icons.email,
-                    validator: (value) =>
-                        (value == null || value.isEmpty) ? 'Requerido' : null,
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Ingrese su email'
+                        : null,
                   ),
 
                   const SizedBox(height: 25),
@@ -112,36 +109,42 @@ class _LoginPageState extends State<LoginPage> {
                   _buildFieldLabel('Contraseña'),
                   const SizedBox(height: 8),
                   AuthTextField(
-                    controller: _passwordController, // Conectado al controlador
+                    controller: _passwordController,
                     label: 'Ingrese su contraseña',
                     icon: Icons.lock,
                     isPassword: true,
-                    validator: (value) =>
-                        (value == null || value.isEmpty) ? 'Requerido' : null,
+                    validator: (value) => (value == null || value.isEmpty)
+                        ? 'Ingrese su contraseña'
+                        : null,
                   ),
 
                   const SizedBox(height: 40),
 
-                  // BOTÓN DE ACCIÓN CON INDICADOR DE CARGA
                   InkWell(
                     onTap: isLoading ? null : _handleLogin,
                     child: Container(
                       width: double.infinity,
                       height: 55,
                       decoration: BoxDecoration(
-                        color: isLoading ? Colors.grey : AppTheme.navyBlue,
+                        color: isLoading
+                            ? context.subIconColor.withOpacity(0.3)
+                            : context.iconColor,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Center(
                         child: isLoading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
+                            ? CircularProgressIndicator(
+                                color: context.isDark
+                                    ? AppTheme.darkBackground
+                                    : Colors.white,
                               )
                             : Text(
-                                'Sign In',
+                                'Iniciar Sesión',
                                 style: GoogleFonts.lato(
                                   fontSize: 18,
-                                  color: Colors.white,
+                                  color: context.isDark
+                                      ? AppTheme.darkBackground
+                                      : Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -154,7 +157,13 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('¿No tienes cuenta?'),
+                      Text(
+                        '¿No tienes cuenta?',
+                        style: GoogleFonts.lato(
+                          color: context.subTextColor,
+                          fontSize: 14,
+                        ),
+                      ),
                       TextButton(
                         onPressed: () {
                           Navigator.pushNamed(context, AppRoutes.register);
@@ -163,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                           'Regístrate',
                           style: GoogleFonts.roboto(
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.navyBlue,
+                            color: context.iconColor,
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -186,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
         text,
         style: GoogleFonts.nunitoSans(
           fontWeight: FontWeight.w600,
-          color: Colors.black87,
+          color: context.textColor,
         ),
       ),
     );
