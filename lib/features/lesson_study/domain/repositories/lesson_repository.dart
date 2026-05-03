@@ -20,4 +20,6 @@ abstract class LessonRepository {
     String dayId, {
     String lang = "es",
   });
+
+  Future<void> finishWeek(String token, String quarterlyId, String lessonId);
 }

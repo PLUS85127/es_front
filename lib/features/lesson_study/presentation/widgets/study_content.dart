@@ -116,6 +116,7 @@ class _StudyContentState extends State<StudyContent>
     if (auth.user?.token != null) {
       final success = await provider.markDayAsRead(
         auth.user!.token,
+        "es",
         widget.quarterlyId,
         widget.lessonId,
         widget.dayId,

@@ -5,6 +5,8 @@ import 'package:es_control/core/di/injection_container.dart' as di;
 import 'package:es_control/features/authentication/presentation/provider/auth_provider.dart';
 import 'package:es_control/features/reporting/presentation/provider/stats_provider.dart';
 import 'package:es_control/features/lesson_study/presentation/providers/lesson_provider.dart';
+import 'package:es_control/features/admin/presentation/provider/admin_provider.dart';
+import 'package:es_control/features/groups/presentation/provider/group_provider.dart';
 
 import 'package:es_control/core/providers/theme_provider.dart';
 import 'package:es_control/core/routes/app_router.dart';
@@ -25,10 +27,13 @@ class ESControlApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()), //
-        ChangeNotifierProvider(create: (_) => di.sl<LessonProvider>()), //
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => di.sl<LessonProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<AuthProvider>()),
         ChangeNotifierProvider(create: (_) => di.sl<StatsProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<GroupProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<AdminProvider>()),
+        ChangeNotifierProvider(create: (_) => di.sl<ChurchProvider>()),
       ],
 
       child: Consumer<ThemeProvider>(

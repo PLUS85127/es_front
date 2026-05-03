@@ -7,7 +7,6 @@ import '../../features/authentication/domain/use_cases/login_usecase.dart';
 import '../../features/authentication/domain/use_cases/register_usecase.dart';
 import '../../features/authentication/presentation/provider/auth_provider.dart';
 import '../../features/authentication/domain/use_cases/logout_usecase.dart';
-import '../../features/authentication/domain/use_cases/get_me_usecase.dart';
 
 void initAuth(GetIt sl) {
   //datasource

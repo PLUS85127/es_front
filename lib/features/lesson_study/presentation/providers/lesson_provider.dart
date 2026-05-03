@@ -1,16 +1,20 @@
 import 'package:es_control/core/utils/date_formatter.dart';
 import 'package:es_control/features/lesson_study/domain/use_cases/mark_day_as_read_usecase.dart';
 import 'package:flutter/material.dart';
+
 import '../../domain/entities/quarterly.dart';
 import '../../domain/entities/lesson.dart';
+
 import '../../domain/use_cases/get_day_read_usecase.dart';
 import '../../domain/use_cases/get_quarterlies_usecase.dart';
 import '../../domain/use_cases/get_lessons_usecase.dart';
+import '../../domain/use_cases/finish_week_usecase.dart';
 
 class LessonProvider extends ChangeNotifier {
   final GetQuarterliesUseCase getQuarterliesUseCase;
   final GetLessonsUseCase getLessonsUseCase;
   final GetDayReadUseCase getDayReadUseCase;
+  final FinishWeekUseCase finishWeekUseCase;
   final MarkDayAsReadUseCase markDayAsReadUseCase;
 
   double _currentFontSize = 18.0;
@@ -26,6 +30,7 @@ class LessonProvider extends ChangeNotifier {
     required this.getQuarterliesUseCase,
     required this.getLessonsUseCase,
     required this.getDayReadUseCase,
+    required this.finishWeekUseCase,
   });
 
   List<Quarterly> _quarterlies = [];
@@ -33,6 +38,7 @@ class LessonProvider extends ChangeNotifier {
   final Map<String, Map<String, dynamic>> _dayReads = {};
   bool _isLoading = false;
 
+  //obtener el quarterly actual
   Quarterly? get currentQuarterly {
     if (_quarterlies.isEmpty) return null;
     try {
@@ -47,6 +53,7 @@ class LessonProvider extends ChangeNotifier {
     }
   }
 
+  //obtener el lesson actual
   Lesson? get currentLesson {
     if (_lessons.isEmpty) return null;
     try {
@@ -61,6 +68,7 @@ class LessonProvider extends ChangeNotifier {
     }
   }
 
+  //obtener todos los quarterly
   List<Quarterly> get quarterlies => _quarterlies;
   List<Lesson> get lessons => _lessons;
   Map<String, Map<String, dynamic>> get dayReads => _dayReads;
@@ -79,6 +87,7 @@ class LessonProvider extends ChangeNotifier {
     }
   }
 
+  //obtener todos los lessons de un quarterly
   Future<void> fetchLessons(String quarterlyId, {String lang = "es"}) async {
     _isLoading = true;
     _lessons = [];
@@ -93,6 +102,7 @@ class LessonProvider extends ChangeNotifier {
     }
   }
 
+  //obtener el estado del día
   Future<void> fetchDayRead(
     String qId,
     String lId,
@@ -117,14 +127,16 @@ class LessonProvider extends ChangeNotifier {
     }
   }
 
+  //marcar el día como leído
   Future<bool> markDayAsRead(
     String token,
     String qId,
     String lId,
     String dId,
+    String lang,
   ) async {
     try {
-      await markDayAsReadUseCase.execute(token, qId, lId, dId);
+      await markDayAsReadUseCase.execute(token, qId, lId, dId, lang);
 
       if (_dayReads.containsKey(dId)) {
         bool estadoActual = _dayReads[dId]!['isRead'] ?? false;
@@ -138,6 +150,7 @@ class LessonProvider extends ChangeNotifier {
     }
   }
 
+  //guardar temporalmente las respuestas
   final Map<String, String> _answers = {};
 
   String getAnswer(String questionKey) {
@@ -146,5 +159,25 @@ class LessonProvider extends ChangeNotifier {
 
   void saveAnswerTemporarily(String questionKey, String answer) {
     _answers[questionKey] = answer;
+  }
+
+  //marcar la semana como terminada
+  Future<bool> markWeekAsFinished(
+    String token,
+    String quarterlyId,
+    String lessonId,
+  ) async {
+    try {
+      final success = await finishWeekUseCase.execute(
+        token,
+        quarterlyId,
+        lessonId,
+      );
+      return success;
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 }

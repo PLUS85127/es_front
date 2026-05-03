@@ -6,7 +6,7 @@ class CreateGroupUseCase {
 
   CreateGroupUseCase(this.repository);
 
-  Future<GroupEntity> execute(String token, String name, int leaderId) async {
+  Future<String?> execute(String token, String name, int leaderId) async {
     return await repository.createGroup(token, name, leaderId);
   }
 }

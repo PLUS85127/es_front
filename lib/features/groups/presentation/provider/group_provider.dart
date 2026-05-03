@@ -1,22 +1,44 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/group_entity.dart';
+import '../../../authentication/domain/entities/user_entity.dart';
 import '../../domain/use_cases/get_my_groups_usecase.dart';
 import '../../domain/use_cases/create_group_usecase.dart';
 import '../../domain/use_cases/join_group_usecase.dart';
+import '../../domain/use_cases/get_group_members_usecase.dart';
+import '../../domain/use_cases/leave_group_usecase.dart';
+import '../../domain/use_cases/get_attendance_usecase.dart';
+import '../../domain/use_cases/mark_attendance_usecase.dart';
 
 class GroupProvider extends ChangeNotifier {
   final GetMyGroupsUseCase getMyGroupsUseCase;
   final CreateGroupUseCase createGroupUseCase;
   final JoinGroupUseCase joinGroupUseCase;
+  final GetGroupMembersUseCase getGroupMembersUseCase;
+  final LeaveGroupUseCase leaveGroupUseCase;
+  final GetAttendanceUseCase getAttendanceUseCase;
+  final MarkAttendanceUseCase markAttendanceUseCase;
 
   GroupProvider({
     required this.getMyGroupsUseCase,
     required this.createGroupUseCase,
     required this.joinGroupUseCase,
+    required this.getGroupMembersUseCase,
+    required this.leaveGroupUseCase,
+    required this.getAttendanceUseCase,
+    required this.markAttendanceUseCase,
   });
 
+  //ver mi grupo
   List<GroupEntity> _myGroups = [];
   List<GroupEntity> get joinedGroups => _myGroups;
+
+  //ver miembros de grupo
+  List<UserEntity> _currentGroupMembers = [];
+  List<UserEntity> get currentGroupMembers => _currentGroupMembers;
+
+  //guardar asistencia
+  Map<String, dynamic> _currentAttendance = {};
+  Map<String, dynamic> get attendance => _currentAttendance;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -31,8 +53,6 @@ class GroupProvider extends ChangeNotifier {
 
     try {
       _myGroups = await getMyGroupsUseCase.execute(token);
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
@@ -41,7 +61,8 @@ class GroupProvider extends ChangeNotifier {
     }
   }
 
-  Future<GroupEntity?> createNewGroup(
+  //crear grupo
+  Future<String?> createNewGroup(
     String token,
     String name,
     int leaderId,
@@ -52,18 +73,21 @@ class GroupProvider extends ChangeNotifier {
 
     try {
       final newGroup = await createGroupUseCase.execute(token, name, leaderId);
-      _myGroups.add(newGroup);
-      _isLoading = false;
-      notifyListeners();
+      if (newGroup != null) {
+        await loadMyGroups(token);
+      }
+
       return newGroup;
     } catch (e) {
       _errorMessage = e.toString();
+      return null;
+    } finally {
       _isLoading = false;
       notifyListeners();
-      return null;
     }
   }
 
+  //unirse a grupo
   Future<bool> joinExistingGroup(String token, String code) async {
     _isLoading = true;
     _errorMessage = null;
@@ -72,14 +96,79 @@ class GroupProvider extends ChangeNotifier {
     try {
       final success = await joinGroupUseCase.execute(token, code);
       if (success) {
-        await loadMyGroups(token);
+        await loadMyGroups(token); //si se un recargar lista
       }
       return success;
     } catch (e) {
       _errorMessage = e.toString();
+      return false;
+    } finally {
       _isLoading = false;
       notifyListeners();
-      return false;
+    }
+  }
+
+  //cargar asistencia
+  Future<void> loadAttendance(
+    String token,
+    String groupId,
+    String quarterlyId,
+    String lessonId,
+  ) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _currentAttendance = await getAttendanceUseCase.execute(
+        token,
+        groupId,
+        quarterlyId,
+        lessonId,
+      );
+    } catch (e) {
+      _errorMessage = e.toString();
+      _currentAttendance = {};
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+
+    //guardar/marcar asistencia
+    Future<bool> saveAttendance(
+      String token,
+      String groupId,
+      String quarterlyId,
+      String lessonId,
+      List<int> presentUserIds,
+      int visits,
+    ) async {
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+
+      try {
+        final success = await markAttendanceUseCase.execute(
+          token,
+          groupId,
+          quarterlyId,
+          lessonId,
+          presentUserIds,
+          visits,
+        );
+
+        if (success) {
+          await loadAttendance(token, groupId, quarterlyId, lessonId);
+        }
+
+        return success;
+      } catch (e) {
+        _errorMessage = e.toString();
+        return false;
+      } finally {
+        _isLoading = false;
+        notifyListeners();
+      }
     }
   }
 }
