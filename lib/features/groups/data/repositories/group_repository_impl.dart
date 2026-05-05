@@ -87,6 +87,7 @@ class GroupRepositoryImpl implements GroupRepository {
     String lessonId,
     List<int> presentUserIds,
     int visits,
+    List<Map<String, dynamic>> progressData,
   ) async {
     try {
       return await remoteDataSource.markAttendance(
@@ -96,6 +97,7 @@ class GroupRepositoryImpl implements GroupRepository {
         lessonId,
         presentUserIds,
         visits,
+        progressData,
       );
     } catch (e) {
       return false;

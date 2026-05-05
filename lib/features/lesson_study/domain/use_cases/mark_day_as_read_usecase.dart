@@ -4,13 +4,13 @@ class MarkDayAsReadUseCase {
   final LessonRepository repository;
   MarkDayAsReadUseCase(this.repository);
 
-  Future<void> execute(
+  Future<bool> execute(
     String token,
+    String lang,
     String qId,
     String lId,
     String dId,
-    String lang,
   ) async {
-    return await repository.markDayAsRead(token, qId, lId, dId, lang);
+    return await repository.markDayAsRead(token, lang, qId, lId, dId);
   }
 }

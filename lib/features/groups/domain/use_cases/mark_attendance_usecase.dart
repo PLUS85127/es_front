@@ -12,6 +12,7 @@ class MarkAttendanceUseCase {
     String lessonId,
     List<int> presentUserIds,
     int visits,
+    List<Map<String, dynamic>> progressData,
   ) async {
     return await groupRepository.markAttendance(
       token,
@@ -20,6 +21,7 @@ class MarkAttendanceUseCase {
       lessonId,
       presentUserIds,
       visits,
+      progressData,
     );
   }
 }

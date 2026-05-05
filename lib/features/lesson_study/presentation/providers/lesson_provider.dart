@@ -130,13 +130,13 @@ class LessonProvider extends ChangeNotifier {
   //marcar el día como leído
   Future<bool> markDayAsRead(
     String token,
+    String lang,
     String qId,
     String lId,
     String dId,
-    String lang,
   ) async {
     try {
-      await markDayAsReadUseCase.execute(token, qId, lId, dId, lang);
+      await markDayAsReadUseCase.execute(token, lang, qId, lId, dId);
 
       if (_dayReads.containsKey(dId)) {
         bool estadoActual = _dayReads[dId]!['isRead'] ?? false;

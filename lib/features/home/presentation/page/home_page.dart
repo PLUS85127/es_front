@@ -1,15 +1,28 @@
+import 'package:es_control/features/authentication/domain/entities/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 import 'package:es_control/core/theme/app_theme.dart';
 import 'package:es_control/core/routes/app_router.dart';
+
 import 'package:es_control/features/authentication/presentation/provider/auth_provider.dart';
 import 'package:es_control/features/lesson_study/presentation/providers/lesson_provider.dart';
+
 import '../widgets/day_card.dart';
 import '../../../../core/theme/theme_extension.dart';
 
+import '../../../navigation/presentation/widgets/top_mode_toggle.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final bool isAdminMode;
+  final ValueChanged<bool> onModeChanged;
+
+  const HomePage({
+    super.key,
+    required this.isAdminMode,
+    required this.onModeChanged,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -36,43 +49,54 @@ class _HomePageState extends State<HomePage> {
     final authProvider = context.watch<AuthProvider>();
     final String displayName = authProvider.user?.firstName ?? 'Usuario';
 
+    final role = authProvider.user?.role ?? UserRole.member;
+    final bool canSeeAdminMode = role != UserRole.member;
+
     final textColor = context.textColor;
     final subTextColor = context.subTextColor;
 
-    return Scaffold(
-      body: SafeArea(
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 30, 25, 10),
-              child: Text(
-                "Hola, $displayName",
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
-                ),
+            Text(
+              "Hola, $displayName!",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: textColor,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Text(
-                "Selecciona el día de estudio:",
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: subTextColor,
+
+            const SizedBox(height: 15),
+
+            if (canSeeAdminMode) ...[
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: 230,
+                  child: TopModeToggle(
+                    isAdminMode: widget.isAdminMode,
+                    onModeChanged: widget.onModeChanged,
+                  ),
                 ),
+              ),
+              const SizedBox(height: 25),
+            ],
+
+            Text(
+              "Selecciona el día de estudio:",
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: subTextColor,
               ),
             ),
             const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: _buildDaysGrid(context),
-              ),
-            ),
+
+            _buildDaysGrid(context),
           ],
         ),
       ),

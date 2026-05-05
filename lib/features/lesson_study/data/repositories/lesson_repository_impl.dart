@@ -69,30 +69,55 @@ class LessonRepositoryImpl implements LessonRepository {
   }
 
   @override
-  Future<void> markDayAsRead(
+  Future<bool> markDayAsRead(
     String token,
+    String lang,
     String quarterlyId,
     String lessonId,
     String dayId,
   ) async {
     final url = '${ApiConfig.baseUrl}/progress/toggle';
 
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: json.encode({
-        'lang': 'es',
-        'qId': quarterlyId,
-        'lId': lessonId,
-        'dId': dayId,
-      }),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'lang': lang,
+          'qId': quarterlyId,
+          'lId': lessonId,
+          'dId': dayId,
+        }),
+      );
+      return (response.statusCode == 200 || response.statusCode == 201);
+    } catch (e) {
+      return false;
+    }
+  }
 
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw Exception('Error al marcar: ${response.statusCode}');
+  @override
+  Future<bool> finishWeek(
+    String token,
+    String quarterlyId,
+    String lessonId,
+  ) async {
+    final url = '${ApiConfig.baseUrl}/progress/finish-week';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({'qId': quarterlyId, 'lId': lessonId}),
+      );
+      return (response.statusCode == 200);
+    } catch (e) {
+      return false;
     }
   }
 }

@@ -28,7 +28,7 @@ class AppRouter {
       AppRoutes.login: (context) => const LoginPage(),
       AppRoutes.register: (context) => const RegisterPage(),
       AppRoutes.main: (context) => const MainPage(),
-      AppRoutes.home: (context) => const HomePage(),
+      // AppRoutes.home: (context) => const HomePage(),
       AppRoutes.lessonStudy: (context) => const LessonsStudyPage(),
 
       AppRoutes.lessonList: (context) {

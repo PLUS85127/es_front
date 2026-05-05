@@ -5,7 +5,7 @@ class CreateChurchUseCase {
 
   CreateChurchUseCase(this.repository);
 
-  Future<bool> call(String token, String name, String address) async {
+  Future<bool> execute(String token, String name, String address) async {
     return await repository.createChurch(token, name, address);
   }
 }

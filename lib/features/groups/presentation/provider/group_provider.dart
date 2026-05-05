@@ -30,7 +30,7 @@ class GroupProvider extends ChangeNotifier {
 
   //ver mi grupo
   List<GroupEntity> _myGroups = [];
-  List<GroupEntity> get joinedGroups => _myGroups;
+  List<GroupEntity> get myGroups => _myGroups;
 
   //ver miembros de grupo
   List<UserEntity> _currentGroupMembers = [];
@@ -142,6 +142,7 @@ class GroupProvider extends ChangeNotifier {
       String lessonId,
       List<int> presentUserIds,
       int visits,
+      List<Map<String, dynamic>> progressData,
     ) async {
       _isLoading = true;
       _errorMessage = null;
@@ -155,6 +156,7 @@ class GroupProvider extends ChangeNotifier {
           lessonId,
           presentUserIds,
           visits,
+          progressData,
         );
 
         if (success) {

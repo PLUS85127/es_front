@@ -7,7 +7,7 @@ import 'package:es_control/features/home/presentation/page/home_page.dart';
 import 'package:es_control/features/reporting/presentation/page/history_page.dart';
 import 'package:es_control/features/authentication/presentation/page/profile_page.dart';
 import 'package:es_control/features/lesson_study/presentation/page/lessons_study_page.dart';
-//import 'package:es_control/features/groups/presentation/page/groups_page.dart';
+import 'package:es_control/features/groups/presentation/page/groups_page.dart';
 
 import '../widgets/top_mode_toggle.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
@@ -38,13 +38,30 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     final role = auth.user?.role ?? UserRole.member;
+    //final bool canSeeAdmin = role != UserRole.member;
 
-    final bool canSeeAdmin = role != UserRole.member;
-
+    //pantallas
     final List<Widget> currentPages = _isAdminMode
-        ? [const ProfilePage()]
+        ? [
+            GroupsPage(
+              isAdminMode: _isAdminMode,
+              onModeChanged: (val) => setState(() {
+                _isAdminMode = val;
+                _currentIndex = 0;
+              }),
+            ),
+            const Scaffold(body: Center(child: Text("Panel de Grupos"))),
+          ]
         : [
-            const HomePage(),
+            HomePage(
+              isAdminMode: _isAdminMode,
+              onModeChanged: (val) {
+                setState(() {
+                  _isAdminMode = val;
+                  _currentIndex = 0;
+                });
+              },
+            ),
             const LessonsStudyPage(),
             const HistoryPage(),
             const ProfilePage(),
@@ -52,24 +69,7 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       extendBody: true,
-      body: Stack(
-        children: [
-          IndexedStack(index: _currentIndex, children: currentPages),
-          if (canSeeAdmin)
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 10,
-              left: 20,
-              right: 20,
-              child: TopModeToggle(
-                isAdminMode: _isAdminMode,
-                onModeChanged: (val) => setState(() {
-                  _isAdminMode = val;
-                  _currentIndex = 0;
-                }),
-              ),
-            ),
-        ],
-      ),
+      body: IndexedStack(index: _currentIndex, children: currentPages),
       bottomNavigationBar: CustomBottomNavBar(
         isAdminMode: _isAdminMode,
         currentIndex: _currentIndex,

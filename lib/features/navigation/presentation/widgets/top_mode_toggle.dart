@@ -15,7 +15,6 @@ class TopModeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Usando tu recurso context.isDark
     final isDark = context.isDark;
 
     return Container(
@@ -42,7 +41,7 @@ class TopModeToggle extends StatelessWidget {
           ),
           Expanded(
             child: _ToggleItem(
-              label: "Administración",
+              label: "Mi grupo",
               isActive: isAdminMode,
               onTap: () => onModeChanged(true),
             ),

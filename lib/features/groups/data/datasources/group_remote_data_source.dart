@@ -10,6 +10,7 @@ abstract class GroupRemoteDataSource {
   Future<bool> joinGroup(String token, String code);
   Future<List<UserModel>> getGroupMembers(String token, String groupId);
   Future<bool> leaveGroup(String token, String groupId);
+
   Future<Map<String, dynamic>> getAttendance(
     String token,
     String groupId,
@@ -23,6 +24,7 @@ abstract class GroupRemoteDataSource {
     String lessonId,
     List<int> presentUserIds,
     int visits,
+    List<Map<String, dynamic>> progressData,
   );
 }
 
@@ -155,6 +157,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
     String lessonId,
     List<int> presentUserIds,
     int visits,
+    List<Map<String, dynamic>> progressData,
   ) async {
     final response = await client.post(
       Uri.parse('${ApiConfig.baseUrl}/groups/$groupId/attendance'),
@@ -167,6 +170,7 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
         'lessonId': lessonId,
         'presentUserIds': presentUserIds,
         'visits': visits,
+        'progressData': progressData,
       }),
     );
 

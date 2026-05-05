@@ -1,15 +1,15 @@
 import '../repositories/lesson_repository.dart';
 
 class FinishWeekUseCase {
-  final LessonRepository lessonRepository;
+  final LessonRepository repository;
 
-  FinishWeekUseCase(this.lessonRepository);
+  FinishWeekUseCase(this.repository);
 
-  Future<void> execute(
+  Future<bool> execute(
     String token,
     String quarterlyId,
     String lessonId,
   ) async {
-    await lessonRepository.finishWeek(token, quarterlyId, lessonId);
+    return await repository.finishWeek(token, quarterlyId, lessonId);
   }
 }

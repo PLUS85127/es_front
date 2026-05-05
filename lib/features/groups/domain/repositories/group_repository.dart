@@ -23,6 +23,7 @@ abstract class GroupRepository {
     String groupId,
     String quarterlyId,
     String lessonId,
+    //List<Map<String, dynamic>> progressData,
   );
 
   Future<bool> markAttendance(
@@ -32,5 +33,6 @@ abstract class GroupRepository {
     String lessonId,
     List<int> presentUserIds,
     int visits,
+    List<Map<String, dynamic>> progressData,
   );
 }

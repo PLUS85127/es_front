@@ -5,8 +5,9 @@ abstract class LessonRepository {
   Future<List<Quarterly>> getQuarterlies(String lang);
 
   //marcar un dia como leido
-  Future<void> markDayAsRead(
+  Future<bool> markDayAsRead(
     String token,
+    String lang,
     String quarterlyId,
     String lessonId,
     String dayId,
@@ -21,5 +22,5 @@ abstract class LessonRepository {
     String lang = "es",
   });
 
-  Future<void> finishWeek(String token, String quarterlyId, String lessonId);
+  Future<bool> finishWeek(String token, String quarterlyId, String lessonId);
 }

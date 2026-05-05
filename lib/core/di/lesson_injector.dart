@@ -7,6 +7,8 @@ import '../../features/lesson_study/domain/use_cases/get_lessons_usecase.dart';
 import '../../features/lesson_study/domain/use_cases/get_day_read_usecase.dart';
 import '../../features/lesson_study/presentation/providers/lesson_provider.dart';
 
+import '../../features/lesson_study/domain/use_cases/finish_week_usecase.dart';
+
 void initLesson(GetIt sl) {
   //repositorios
   sl.registerLazySingleton<LessonRepository>(() => LessonRepositoryImpl());
@@ -16,6 +18,7 @@ void initLesson(GetIt sl) {
   sl.registerLazySingleton(() => GetLessonsUseCase(sl()));
   sl.registerLazySingleton(() => GetDayReadUseCase(sl()));
   sl.registerLazySingleton(() => MarkDayAsReadUseCase(sl()));
+  sl.registerLazySingleton(() => FinishWeekUseCase(sl()));
 
   //providers
   sl.registerFactory(
@@ -24,6 +27,7 @@ void initLesson(GetIt sl) {
       getLessonsUseCase: sl(),
       getDayReadUseCase: sl(),
       markDayAsReadUseCase: sl(),
+      finishWeekUseCase: sl(),
     ),
   );
 }

@@ -109,7 +109,7 @@ class AdminRemoteDataSourceImpl implements AdminRemoteDataSource {
   }
 
   @override
-  Future<void> finishWeek(
+  Future<bool> finishWeek(
     String token,
     String quarterlyId,
     String lessonId,

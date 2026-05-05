@@ -6,6 +6,7 @@ import '../../features/admin/domain/repositories/admin_repository.dart';
 import '../../features/admin/domain/use_cases/search_user_usecase.dart';
 import '../../features/admin/domain/use_cases/assign_role_usecase.dart';
 import '../../features/admin/presentation/provider/admin_provider.dart';
+import '../../features/admin/domain/use_cases/transfer_user_church_usecase.dart';
 
 void initAdmin(GetIt sl) {
   //datasource
