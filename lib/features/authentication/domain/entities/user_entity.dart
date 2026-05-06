@@ -9,6 +9,7 @@ class UserEntity {
   final String email;
   final String? churchId;
   //final String? groupName;
+  final int studyDays;
 
   UserEntity({
     required this.id,
@@ -19,5 +20,6 @@ class UserEntity {
     required this.email,
     this.churchId,
     //this.groupName,
+    this.studyDays = 0,
   });
 }

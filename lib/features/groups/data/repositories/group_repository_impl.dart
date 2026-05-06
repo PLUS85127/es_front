@@ -40,9 +40,19 @@ class GroupRepositoryImpl implements GroupRepository {
 
   //ver miembros de grupo
   @override
-  Future<List<UserEntity>> getGroupMembers(String token, String groupId) async {
+  Future<List<UserEntity>> getGroupMembers(
+    String token,
+    String groupId,
+    String quarterlyId,
+    String lessonId,
+  ) async {
     try {
-      return await remoteDataSource.getGroupMembers(token, groupId);
+      return await remoteDataSource.getGroupMembers(
+        token,
+        groupId,
+        quarterlyId,
+        lessonId,
+      );
     } catch (e) {
       return [];
     }

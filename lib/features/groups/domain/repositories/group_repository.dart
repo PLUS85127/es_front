@@ -12,7 +12,12 @@ abstract class GroupRepository {
   Future<bool> joinGroup(String token, String code);
 
   //Verembros de grupo
-  Future<List<UserEntity>> getGroupMembers(String token, String groupId);
+  Future<List<UserEntity>> getGroupMembers(
+    String token,
+    String groupId,
+    String quarterlyId,
+    String lessonId,
+  );
 
   // Salir de grupo
   Future<bool> leaveGroup(String token, String groupId);

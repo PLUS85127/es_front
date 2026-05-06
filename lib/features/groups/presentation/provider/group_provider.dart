@@ -46,6 +46,7 @@ class GroupProvider extends ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
+  //cargar mis grupos
   Future<void> loadMyGroups(String token) async {
     _isLoading = true;
     _errorMessage = null;
@@ -133,44 +134,69 @@ class GroupProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
 
-    //guardar/marcar asistencia
-    Future<bool> saveAttendance(
-      String token,
-      String groupId,
-      String quarterlyId,
-      String lessonId,
-      List<int> presentUserIds,
-      int visits,
-      List<Map<String, dynamic>> progressData,
-    ) async {
-      _isLoading = true;
-      _errorMessage = null;
-      notifyListeners();
+  //guardar/marcar asistencia
+  Future<bool> saveAttendance(
+    String token,
+    String groupId,
+    String quarterlyId,
+    String lessonId,
+    List<int> presentUserIds,
+    int visits,
+    List<Map<String, dynamic>> progressData,
+  ) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
 
-      try {
-        final success = await markAttendanceUseCase.execute(
-          token,
-          groupId,
-          quarterlyId,
-          lessonId,
-          presentUserIds,
-          visits,
-          progressData,
-        );
+    try {
+      final success = await markAttendanceUseCase.execute(
+        token,
+        groupId,
+        quarterlyId,
+        lessonId,
+        presentUserIds,
+        visits,
+        progressData,
+      );
 
-        if (success) {
-          await loadAttendance(token, groupId, quarterlyId, lessonId);
-        }
-
-        return success;
-      } catch (e) {
-        _errorMessage = e.toString();
-        return false;
-      } finally {
-        _isLoading = false;
-        notifyListeners();
+      if (success) {
+        await loadAttendance(token, groupId, quarterlyId, lessonId);
       }
+
+      return success;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadGroupMembers(
+    String token,
+    String groupId,
+    String qId,
+    String lId,
+  ) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final members = await getGroupMembersUseCase.execute(
+        token,
+        groupId,
+        qId,
+        lId,
+      );
+      _currentGroupMembers = members;
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }

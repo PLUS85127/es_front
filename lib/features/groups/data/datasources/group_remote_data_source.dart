@@ -8,7 +8,12 @@ abstract class GroupRemoteDataSource {
   Future<List<GroupModel>> getMyGroups(String token);
   Future<String> createGroup(String token, String name, int leaderId);
   Future<bool> joinGroup(String token, String code);
-  Future<List<UserModel>> getGroupMembers(String token, String groupId);
+  Future<List<UserModel>> getGroupMembers(
+    String token,
+    String groupId,
+    String quarterlyId,
+    String lessonId,
+  );
   Future<bool> leaveGroup(String token, String groupId);
 
   Future<Map<String, dynamic>> getAttendance(
@@ -92,24 +97,6 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
     }
   }
 
-  //obtener miembros del grupo
-  @override
-  Future<List<UserModel>> getGroupMembers(String token, String groupId) async {
-    final response = await client.get(
-      Uri.parse('${ApiConfig.baseUrl}/groups/$groupId/members'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode == 200) {
-      final decoded = json.decode(response.body);
-      if (decoded['ok'] == true && decoded['result'] != null) {
-        final List list = decoded['result'];
-        return list.map((item) => UserModel.fromJson(item)).toList();
-      }
-    }
-    return [];
-  }
-
   //salir de grupo
   @override
   Future<bool> leaveGroup(String token, String groupId) async {
@@ -179,5 +166,32 @@ class GroupRemoteDataSourceImpl implements GroupRemoteDataSource {
       return decoded['ok'] == true;
     }
     return false;
+  }
+
+  // listar los miembros del grupo con su progreso de estudio
+  Future<List<UserModel>> getGroupMembers(
+    String token,
+    String groupId,
+    String quarterlyId,
+    String lessonId,
+  ) async {
+    final response = await client.get(
+      Uri.parse(
+        '${ApiConfig.baseUrl}/groups/$groupId/members?quarterlyId=$quarterlyId&lessonId=$lessonId',
+      ),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      if (decoded['ok'] == true && decoded['result'] != null) {
+        final List list = decoded['result'];
+        return list.map((item) => UserModel.fromJson(item)).toList();
+      }
+    }
+    return [];
   }
 }

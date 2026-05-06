@@ -6,7 +6,17 @@ class GetGroupMembersUseCase {
 
   GetGroupMembersUseCase(this.groupRepository);
 
-  Future<List<UserEntity>> execute(String token, String groupId) async {
-    return await groupRepository.getGroupMembers(token, groupId);
+  Future<List<UserEntity>> execute(
+    String token,
+    String groupId,
+    String quarterlyId,
+    String lessonId,
+  ) async {
+    return await groupRepository.getGroupMembers(
+      token,
+      groupId,
+      quarterlyId,
+      lessonId,
+    );
   }
 }
