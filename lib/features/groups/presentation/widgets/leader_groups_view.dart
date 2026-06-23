@@ -112,7 +112,7 @@ class _LeaderGroupsViewState extends State<LeaderGroupsView> {
           child: widget.provider.isLoading || !_membersLoaded
               ? const Center(child: CircularProgressIndicator())
               : members.isEmpty
-              ? const Center(child: Text("Aún no hay hermanos en este grupo"))
+              ? const Center(child: Text("Aún no hay personas en este grupo"))
               : ListenableBuilder(
                   listenable: widget.attendanceController,
                   builder: (context, _) {

@@ -18,7 +18,7 @@ class ProfileInfoSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: context.cardColor, // Automático día/noche
+        color: context.cardColor,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(

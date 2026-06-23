@@ -13,6 +13,6 @@ class ThemeProvider extends ChangeNotifier {
     } else {
       _themeMode = ThemeMode.light;
     }
-    notifyListeners(); //notificar a los widgets que esten escuchando este cambio (avisa a la UI que debe de cambiar)
+    notifyListeners();
   }
 }

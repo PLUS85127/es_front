@@ -83,7 +83,7 @@ class _CreateGroupModalState extends State<CreateGroupModal> {
         TextField(
           controller: _nameController,
           decoration: InputDecoration(
-            hintText: "Ej. Clase de Jóvenes 'Maranatha'",
+            //hintText: "Nombre de la clase",
             filled: true,
             fillColor: context.isDark ? Colors.white10 : Colors.grey[100],
             border: OutlineInputBorder(
@@ -128,7 +128,7 @@ class _CreateGroupModalState extends State<CreateGroupModal> {
         ),
         const SizedBox(height: 10),
         Text(
-          "Comparte este código con tus alumnos para que se unan:",
+          "Comparte este código con tu grupo para que se unan:",
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 25),

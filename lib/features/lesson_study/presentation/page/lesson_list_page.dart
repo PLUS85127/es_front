@@ -67,7 +67,7 @@ class _LessonListPageState extends State<LessonListPage> {
                 if (provider.lessons.isEmpty) {
                   return Center(
                     child: Text(
-                      "No hay lecciones disponibles para este trimestre.",
+                      "No hay lecciones disponibles del trimestre.",
                       style: GoogleFonts.poppins(color: context.subTextColor),
                     ),
                   );

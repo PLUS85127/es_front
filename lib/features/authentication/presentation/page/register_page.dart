@@ -34,7 +34,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final authProvider = context.read<AuthProvider>();
 
     try {
-      //que no vengan vacios
+      //que no vengan vacios. cambiarlo
       if (_nameController.text.isEmpty ||
           _lastNameController.text.isEmpty ||
           _emailController.text.isEmpty ||

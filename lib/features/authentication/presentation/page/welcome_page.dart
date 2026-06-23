@@ -15,14 +15,13 @@ class WelcomePage extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Column(
           children: [
-            // Parte superior: Logo con más aire
+            //parte superior
             Expanded(
               flex: 3,
               child: Container(
                 padding: const EdgeInsets.only(top: 50),
                 child: Center(
                   child: Hero(
-                    // Animación sutil para el logo
                     tag: 'logo',
                     child: SvgPicture.asset(
                       'assets/images/logo_es_sabatica.svg',
@@ -35,7 +34,7 @@ class WelcomePage extends StatelessWidget {
               ),
             ),
 
-            // Parte inferior: Panel redondeado estético
+            // parte inferior:rectángulo con contenido y sombra
             Expanded(
               flex: 2,
               child: Container(
@@ -72,7 +71,7 @@ class WelcomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        "Sigue tu progreso de Escuela Sabática de forma profesional.",
+                        "Sigue tu progreso de Escuela Sabática.",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           fontSize: 14,
@@ -81,7 +80,7 @@ class WelcomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 40),
 
-                      // Botón de Inicio de Sesión
+                      //boton iniciar sesion
                       _buildWelcomeButton(
                         context: context,
                         label: "Iniciar sesión",
@@ -91,7 +90,7 @@ class WelcomePage extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
-                      // Botón de Registro tipo link
+                      //boton registro tipo link
                       TextButton(
                         onPressed: () =>
                             Navigator.pushNamed(context, AppRoutes.register),

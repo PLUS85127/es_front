@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:es_control/core/theme/theme_extension.dart';
 import '../../domain/entities/group_entity.dart';
 
+//targeta de grupos solo mostrada a los usuarios con el rol admin
 class GroupCard extends StatelessWidget {
   final GroupEntity group;
   final VoidCallback onTap;

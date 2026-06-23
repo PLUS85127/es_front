@@ -116,7 +116,7 @@ class MemberProgressCard extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            //rayitas de progreso (las rayitas)
+            //rayitas de progreso
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(7, (index) {

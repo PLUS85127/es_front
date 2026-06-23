@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                   _buildFieldLabel('Email'),
                   const SizedBox(height: 8),
                   AuthTextField(
-                    controller: _emailController, // Conectado al controlador
+                    controller: _emailController,
                     label: 'Ingrese su email',
                     icon: Icons.email,
                     validator: (value) => (value == null || value.isEmpty)

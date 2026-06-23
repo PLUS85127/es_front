@@ -42,7 +42,6 @@ class MemberDashboardCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        // Un gris muy sutil basado en el tema actual
         color: context.isDark ? Colors.grey.shade900 : Colors.grey.shade100,
         borderRadius: BorderRadius.circular(15),
       ),

@@ -62,7 +62,7 @@ class LessonRepositoryImpl implements LessonRepository {
     );
 
     if (response.statusCode == 200) {
-      return json.decode(response.body); //devuelve el contenido de ReadJson
+      return json.decode(response.body);
     } else {
       throw Exception('Error al obtener la lectura');
     }

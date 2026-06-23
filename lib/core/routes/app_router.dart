@@ -15,7 +15,7 @@ class AppRoutes {
   static const String main = '/main';
   static const String home = '/home';
 
-  // Rutas de las lecciones
+  //rutas de las lecciones
   static const String lessonList = '/lessons';
   static const String lessonDetail = '/lesson_detail';
   static const String lessonStudy = '/lesson_study';
